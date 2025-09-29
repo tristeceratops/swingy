@@ -20,6 +20,7 @@ public class Ghoul extends Enemy{
 		super(level, 2, 2, 5);
 		this.name = name;
 		this.coordinate = coordinate;
+		this.level = level;
 	}
 
 	public static class GhoulBuilder{
