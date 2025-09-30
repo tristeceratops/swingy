@@ -34,5 +34,6 @@ public class Ghoul extends Enemy{
 		public Ghoul build(){
 			return new Ghoul(name, coordinate, level);
 		}
+
 	}
 }

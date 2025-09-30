@@ -39,4 +39,20 @@ public abstract class Hero extends Entity {
 				", experience=" + experience +
 				'}';
 	}
+
+	public int getExperience() {
+		return experience;
+	}
+
+	public void setExperience(int experience) {
+		this.experience = experience;
+	}
+
+	public int getExperienceToNextLevel() {
+		return experienceToNextLevel;
+	}
+
+	public void setExperienceToNextLevel(int experienceToNextLevel) {
+		this.experienceToNextLevel = experienceToNextLevel;
+	}
 }
