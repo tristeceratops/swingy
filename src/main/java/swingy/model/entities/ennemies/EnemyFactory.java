@@ -34,11 +34,10 @@ public class EnemyFactory {
         return creator.create(name, coordinate, level);
     }
 
-    public static Enemy randomCreation(int level) {
+    public static Enemy randomCreation(int level, Coordinate coordinate) {
         List<String> types = new ArrayList<>(ENEMY_CREATORS.keySet());
         Random random = new Random();
         String type = types.get(random.nextInt(types.size()));
-		Coordinate coord = new Coordinate(0, 0);
-        return create(type, type, coord, level);
+        return create(type, type, coordinate, level);
     }
 }
