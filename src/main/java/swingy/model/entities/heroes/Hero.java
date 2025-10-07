@@ -1,6 +1,6 @@
 package swingy.model.entities.heroes;
 
-import swingy.model.Coordinate;
+import swingy.model.game.Coordinate;
 import swingy.model.entities.Entity;
 
 public abstract class Hero extends Entity {

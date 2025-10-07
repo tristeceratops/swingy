@@ -1,6 +1,6 @@
 package swingy.model.entities.ennemies;
 
-import swingy.model.Coordinate;
+import swingy.model.game.Coordinate;
 
 import java.util.*;
 

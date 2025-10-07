@@ -1,6 +1,6 @@
 package swingy.model.entities;
 
-import swingy.model.Coordinate;
+import swingy.model.game.Coordinate;
 
 import jakarta.validation.constraints.*;
 

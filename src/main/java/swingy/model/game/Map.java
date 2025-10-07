@@ -1,7 +1,6 @@
-package swingy.model;
+package swingy.model.game;
 
 import swingy.model.entities.ennemies.Enemy;
-import swingy.model.entities.ennemies.EnemyCreator;
 import swingy.model.entities.ennemies.EnemyFactory;
 import swingy.model.entities.heroes.Hero;
 
@@ -47,33 +46,64 @@ public class Map {
         // Place hero at middle
         hero.move(this.size / 2, this.size / 2);
 		Coordinate heroCoord = hero.getCoordinate();
-
-        carveMaze(heroCoord.getX(), heroCoord.getY());
-
-        this.map[heroCoord.getY()][heroCoord.getX()] = 'h';
+        //draw paths
+        carveMaze();
+        //be sure that hero is well placed on the map
+//        this.map[heroCoord.getY()][heroCoord.getX()] = 'h';
 
         // Place enemies on paths
-        generateEnemies();
+//        generateEnemies();
 
     }
 
-    private void carveMaze(int x, int y) {
-        // Directions (N, S, E, W)
-        int[][] dirs = { {0, -2}, {0, 2}, {-2, 0}, {2, 0} };
-        Collections.shuffle(Arrays.asList(dirs)); // Random order for natural paths
+    private int nearestPowerOf2Below(int x) {
+        if (x < 1) return 0;
+        x |= (x >> 1);
+        x |= (x >> 2);
+        x |= (x >> 4);
+        x |= (x >> 8);
+        x |= (x >> 16);
+        return (x + 1) >> 1;
+    }
 
-        this.map[y][x] = 'g'; // Mark current as ground
-
-        for (int[] d : dirs) {
-            int nx = x + d[0];
-            int ny = y + d[1];
-
-            if (inBounds(nx, ny) && this.map[ny][nx] == 'w') {
-                // Carve wall between (x,y) and (nx,ny)
-                this.map[y + d[1] / 2][x + d[0] / 2] = 'g';
-                carveMaze(nx, ny);
-            }
+    //BSP for room generation
+    //then still use BSP to link room with paths
+    //then create some other random paths, assure that the player(middle of the map) is on a ground tiles
+    private void carveMaze() {
+        int l = this.hero.getLevel();
+        int nbRoom = l * (l + 3) + 1;
+        int powerTwo = nearestPowerOf2Below(nbRoom);
+        System.out.println("powerTwo: " + powerTwo + "size : " + this.size);
+        BSPTree tree = new BSPTree(new Region(new Coordinate(1, 1), size - 2, size - 2));
+        tree.recursiveSplit(Math.max(powerTwo / 2, 3), Math.max(size / 10, 2));
+        nbRoom -= powerTwo;
+        if (nbRoom > 0){
+            //find a way to recreate random region
         }
+        tree.recursiveCreateRoom();
+        tree.traverse(node -> {
+            if (node.isLeaf() && node.getRoom() != null) {
+                Region room = node.getRoom();
+                System.out.println("room is : " + room);
+                int Rx = room.topLeft().getX();
+                int Ry = room.topLeft().getY();
+//                System.out.println("Rx: " + Rx + " Ry: " + Ry + " Size: " + size);
+//                System.out.println("Right: " + region.right() + " bottom: " + region.bottom());
+//                System.out.println("Region width: " + region.width() + " height: " + region.height());
+                for (int i = Ry; i <= room.bottom(); i++) {
+                    for (int j = Rx; j <= room.right(); j++) {
+                        map[i][j] = 'g';
+                    }
+                }
+            } else {
+                if (!node.isLeaf()) {
+                    System.out.println("Not leaf for region :" + node.getRegion());
+                }
+                else if (node.getRoom() == null){
+                    System.out.println("Room is null for region :" + node.getRegion());
+                }
+            }
+        });
     }
 
     private boolean inBounds(int x, int y) {

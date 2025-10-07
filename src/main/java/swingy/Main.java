@@ -1,17 +1,15 @@
 package swingy;
 
-import swingy.model.Map;
-import swingy.model.entities.ennemies.Enemy;
-import swingy.model.entities.ennemies.EnemyFactory;
+import swingy.model.game.Map;
 import swingy.model.entities.heroes.Hero;
 import swingy.model.entities.heroes.HeroFactory;
-import swingy.model.entities.heroes.Knight;
 
 public class Main
 {
     public static void main( String[] args )
     {
         Hero josianne = HeroFactory.create("Knight", "Josianne");
+        josianne.setLevel(1);
         Map map = new Map(josianne);
         char[][] mapCharacters = map.getMap();
         StringBuilder sb = new StringBuilder();

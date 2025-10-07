@@ -1,7 +1,5 @@
 package swingy.model.entities.heroes;
 
-import swingy.model.Coordinate;
-
 public class HeroFactory {
 
 	public static Hero create(String type, String name) {

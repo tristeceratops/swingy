@@ -2,7 +2,7 @@ package swingy;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import swingy.model.Coordinate;
+import swingy.model.game.Coordinate;
 import swingy.model.entities.Entity;
 import swingy.model.entities.ennemies.Slime;
 

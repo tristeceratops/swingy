@@ -1,4 +1,4 @@
-package swingy.model;
+package swingy.model.game;
 
 import java.util.*;
 
