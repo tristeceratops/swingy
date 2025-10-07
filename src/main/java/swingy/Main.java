@@ -9,7 +9,7 @@ public class Main
     public static void main( String[] args )
     {
         Hero josianne = HeroFactory.create("Knight", "Josianne");
-        josianne.setLevel(1);
+        josianne.setLevel(10);
         Map map = new Map(josianne);
         char[][] mapCharacters = map.getMap();
         StringBuilder sb = new StringBuilder();

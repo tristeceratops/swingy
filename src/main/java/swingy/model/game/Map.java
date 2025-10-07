@@ -96,8 +96,27 @@ public class Map {
                     }
                 }
             } else {
-                if (!node.isLeaf()) {
-                    System.out.println("Not leaf for region :" + node.getRegion());
+                if (!node.isLeaf() && !node.getPathPoints().isEmpty()) {
+                    List<Coordinate> pathPoints = node.getPathPoints();
+                    for (int i = 0; i < pathPoints.size() - 1; i++) {
+                        Coordinate p = pathPoints.get(i);
+                        Coordinate q = pathPoints.get(i + 1);
+                        if (p.getX() == q.getX()){
+                            System.out.println("path points are the same on X");
+                            int start = Math.min(p.getY(), q.getY());
+                            int end = Math.max(p.getY(), q.getY());
+                            for (int j = start; j <= end; j++) {
+                                map[j][p.getX()] = 'g';
+                            }
+                        } else if (p.getY() == q.getY()){
+                            System.out.println("path points are the same on Y");
+                            int start = Math.min(p.getX(), q.getX());
+                            int end = Math.max(p.getX(), q.getX());
+                            for (int j = start; j <= end; j++) {
+                                map[p.getY()][j] = 'g';
+                            }
+                        }
+                    }
                 }
                 else if (node.getRoom() == null){
                     System.out.println("Room is null for region :" + node.getRegion());
