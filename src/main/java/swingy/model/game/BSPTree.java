@@ -36,74 +36,127 @@ public class BSPTree {
 		return room;
 	}
 
-	public boolean isLeaf(){
+	public boolean isLeaf() {
 		return left == null && right == null;
 	}
 
-	//create path between the two child of the actual node
-	public void createPath(){
-		if (isLeaf()) return;
+	// Collect all rooms (leaf node rooms) under `node` and add to `rooms`
+	private void collectLeafRooms(BSPTree node, List<Region> rooms) {
+		if (node == null) return;
+		if (node.isLeaf()) {
+			if (node.getRoom() != null) rooms.add(node.getRoom());
+			return;
+		}
+		if (node.left != null) collectLeafRooms(node.left, rooms);
+		if (node.right != null) collectLeafRooms(node.right, rooms);
+	}
 
-		if (this.left.isLeaf() &&  this.right.isLeaf()){
-			Region leftRoom = this.left.getRoom();
-			Region rightRoom = this.right.getRoom();
-			//aligned horizontally
-			if ((leftRoom.y() > rightRoom.y() && leftRoom.y() < rightRoom.bottom()) || (leftRoom.bottom() > rightRoom.y() && leftRoom.bottom() < rightRoom.bottom())){
-				//create two randoms points between the two rooms to connect them with path
-				int minY = Math.min(leftRoom.y(), rightRoom.y());
-				int maxY = Math.max(leftRoom.bottom(), rightRoom.bottom());
-				int randomY = minY + random.nextInt(maxY - minY + 1);
+	// Create a corridor (pathPoints) between two rooms (a and b).
+	private void createCorridorBetweenRooms(Region a, Region b) {
+		if (a == null || b == null) return;
 
-				int leftX = (leftRoom.right() < rightRoom.x()) ? leftRoom.right() : leftRoom.x();
-				int rightX = (leftX == leftRoom.right()) ? rightRoom.x() : rightRoom.right();
-				Coordinate leftPoint = new Coordinate(leftX, randomY);
-				Coordinate rightPoint = new Coordinate(rightX, randomY);
-				pathPoints.add(leftPoint);
-				pathPoints.add(rightPoint);
-			}
-			//aligned vertically
-			else if ((leftRoom.x() > rightRoom.x() && leftRoom.x() < rightRoom.right()) || (leftRoom.right() > rightRoom.x() && leftRoom.right() < rightRoom.right())){
-				//create two randoms points between the two rooms to connect them with path
-				int minX = Math.min(leftRoom.x(), rightRoom.x());
-				int maxX = Math.max(leftRoom.right(), rightRoom.right());
-				int randomX = minX + random.nextInt(maxX - minX + 1);
+		// aligned horizontally (overlap on Y)
+		if ((a.y() > b.y() && a.y() < b.bottom()) || (a.bottom() > b.y() && a.bottom() < b.bottom())) {
+			int minY = Math.min(a.y(), b.y());
+			int maxY = Math.max(a.bottom(), b.bottom());
+			int randomY = minY + random.nextInt(maxY - minY + 1);
 
-				int leftY = (leftRoom.bottom() < rightRoom.y()) ? leftRoom.bottom() : leftRoom.y();
-				int rightY = (leftY == leftRoom.bottom()) ? rightRoom.y() : rightRoom.bottom();
-				Coordinate leftPoint = new Coordinate(leftY, randomX);
-				Coordinate rightPoint = new Coordinate(rightY, randomX);
-				pathPoints.add(leftPoint);
-				pathPoints.add(rightPoint);
-			}
-			//not aligned, need to create path with turns (z shape)
-			else {
-				//create 3-4 randoms points to connect the rooms
-			}
+			int leftX = (a.right() < b.x()) ? a.right() : a.x();
+			int rightX = (leftX == a.right()) ? b.x() : b.right();
+
+			Coordinate leftPoint = new Coordinate(leftX, randomY);
+			Coordinate rightPoint = new Coordinate(rightX, randomY);
+			pathPoints.add(leftPoint);
+			pathPoints.add(rightPoint);
+			return;
+		}
+
+		// aligned vertically (overlap on X)
+		if ((a.x() > b.x() && a.x() < b.right()) || (a.right() > b.x() && a.right() < b.right())) {
+			int minX = Math.min(a.x(), b.x());
+			int maxX = Math.max(a.right(), b.right());
+			int randomX = minX + random.nextInt(maxX - minX + 1);
+
+			int topY = (a.bottom() < b.y()) ? a.bottom() : a.y();
+			int bottomY = (topY == a.bottom()) ? b.y() : b.bottom();
+
+			Coordinate topPoint = new Coordinate(randomX, topY);
+			Coordinate bottomPoint = new Coordinate(randomX, bottomY);
+			pathPoints.add(topPoint);
+			pathPoints.add(bottomPoint);
+			return;
+		}
+
+		// Not aligned: make an L/Z shaped corridor. Pick random point inside each room, then join with one turn.
+		int ax = a.x() + random.nextInt(Math.max(1, a.width()));
+		int ay = a.y() + random.nextInt(Math.max(1, a.height()));
+		int bx = b.x() + random.nextInt(Math.max(1, b.width()));
+		int by = b.y() + random.nextInt(Math.max(1, b.height()));
+
+		Coordinate start = new Coordinate(ax, ay);
+		Coordinate end = new Coordinate(bx, by);
+
+		if (random.nextBoolean()) {
+			// horizontal then vertical: (ax,ay) -> (bx,ay) -> (bx,by)
+			Coordinate mid = new Coordinate(bx, ay);
+			pathPoints.add(start);
+			pathPoints.add(mid);
+			pathPoints.add(end);
 		} else {
-			List<Region> rooms = new ArrayList<>();
+			// vertical then horizontal: (ax,ay) -> (ax,by) -> (bx,by)
+			Coordinate mid = new Coordinate(ax, by);
+			pathPoints.add(start);
+			pathPoints.add(mid);
+			pathPoints.add(end);
 		}
 	}
 
+	// Updated createPath() to use collection and corridor helpers
+	public void createPath() {
+		if (isLeaf()) return;
+
+		// If both immediate children are leaves, keep original direct-room connection
+		if (this.left != null && this.left.isLeaf() && this.right != null && this.right.isLeaf()) {
+			createCorridorBetweenRooms(this.left.getRoom(), this.right.getRoom());
+			return;
+		}
+
+		// Otherwise, collect all leaf rooms under left and right subtrees,
+		// pick one room from each side and connect them.
+		List<Region> leftRooms = new ArrayList<>();
+		List<Region> rightRooms = new ArrayList<>();
+
+		if (this.left != null) collectLeafRooms(this.left, leftRooms);
+		if (this.right != null) collectLeafRooms(this.right, rightRooms);
+
+		if (!leftRooms.isEmpty() && !rightRooms.isEmpty()) {
+			Region from = leftRooms.get(random.nextInt(leftRooms.size()));
+			Region to = rightRooms.get(random.nextInt(rightRooms.size()));
+			createCorridorBetweenRooms(from, to);
+		}
+	}
+
+
 	//return true if succeed
-	public boolean split(int minSize){
+	public boolean split(int minSize) {
 		if (!isLeaf()) return false;
 
 		boolean splitVertical = random.nextBoolean();
-		int max = (splitVertical ? region.width() : region.height()) - minSize ;
+		int max = (splitVertical ? region.width() : region.height()) - minSize;
 		if (max <= minSize) return false;
 
 		int split = minSize + random.nextInt(max - minSize);
 
-		if (splitVertical){
+		if (splitVertical) {
 			left = new BSPTree(new Region(region.topLeft(), split, region.height()));
 			Coordinate rightCorner = new Coordinate(region.x() + split, region.y());
 			right = new BSPTree(new Region(rightCorner, region.width() - split, region.height()));
-			System.out.println("Split Vertical with split = "+ split +" minsSize = " + minSize + " and max = " + max + " :\nleft is:" + left.getRegion() + "\nright is:" + right.getRegion());
+			System.out.println("Split Vertical with split = " + split + " minsSize = " + minSize + " and max = " + max + " :\nleft is:" + left.getRegion() + "\nright is:" + right.getRegion());
 		} else {
 			left = new BSPTree(new Region(region.topLeft(), region.width(), split));
-			Coordinate bottomCorner = new Coordinate(region.x(),  region.y() + split);
+			Coordinate bottomCorner = new Coordinate(region.x(), region.y() + split);
 			right = new BSPTree(new Region(bottomCorner, region.width(), region.height() - split));
-			System.out.println("Split Horizontal with split = "+ split +" minsSize = " + minSize + " and max = " + max + " :\nleft is:" + left.getRegion() + "\nright is:" + right.getRegion());
+			System.out.println("Split Horizontal with split = " + split + " minsSize = " + minSize + " and max = " + max + " :\nleft is:" + left.getRegion() + "\nright is:" + right.getRegion());
 
 		}
 
@@ -111,16 +164,16 @@ public class BSPTree {
 	}
 
 	public void recursiveSplit(int depth, int minSize) {
-        if (depth <= 0) return;
+		if (depth <= 0) return;
 
-        if (split(minSize)) {
-            left.recursiveSplit(depth - 1, minSize);
-            right.recursiveSplit(depth - 1, minSize);
-        }
-    }
+		if (split(minSize)) {
+			left.recursiveSplit(depth - 1, minSize);
+			right.recursiveSplit(depth - 1, minSize);
+		}
+	}
 
-	public void recursiveCreateRoom(){
-		if (!isLeaf()){
+	public void recursiveCreateRoom() {
+		if (!isLeaf()) {
 			if (left != null) left.recursiveCreateRoom();
 			if (right != null) right.recursiveCreateRoom();
 			createPath();
@@ -133,7 +186,7 @@ public class BSPTree {
 		int roomMaxWidth = Math.max(roomMinSize, region.width() - margin);
 		int roomMaxHeight = Math.max(roomMinSize, region.height() - margin);
 
-		if (roomMaxWidth < roomMinSize || roomMaxHeight < roomMinSize){
+		if (roomMaxWidth < roomMinSize || roomMaxHeight < roomMinSize) {
 			System.out.println("too small region : minSize = " + roomMinSize + ", maxSizeWidth = " + roomMaxWidth + ", roomMaxHeight = " + roomMaxHeight);
 			return; //too small region
 		}
@@ -145,10 +198,10 @@ public class BSPTree {
 		int y = region.y() + random.nextInt(Math.max(1, region.height() - h));
 
 		room = new Region(new Coordinate(x, y), w, h);
-		System.out.println("room recursive create\nRegion: " + region+"\nRoom: " + room);
+		System.out.println("room recursive create\nRegion: " + region + "\nRoom: " + room);
 	}
 
-	public void traverse(Consumer<BSPTree> action){
+	public void traverse(Consumer<BSPTree> action) {
 		action.accept(this);
 		if (left != null) left.traverse(action);
 		if (right != null) right.traverse(action);
