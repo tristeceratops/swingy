@@ -56,9 +56,9 @@ public class BSPTree {
 		if (a == null || b == null) return;
 
 		// aligned horizontally (overlap on Y)
-		if ((a.y() > b.y() && a.y() < b.bottom()) || (a.bottom() > b.y() && a.bottom() < b.bottom())) {
-			int minY = Math.min(a.y(), b.y());
-			int maxY = Math.max(a.bottom(), b.bottom());
+		if ((a.y() >= b.y() && a.y() <= b.bottom()) || (a.bottom() >= b.y() && a.bottom() <= b.bottom())) {
+			int minY = Math.max(a.y(), b.y());
+			int maxY = Math.min(a.bottom(), b.bottom());
 			int randomY = minY + random.nextInt(maxY - minY + 1);
 
 			int leftX = (a.right() < b.x()) ? a.right() : a.x();
@@ -72,9 +72,9 @@ public class BSPTree {
 		}
 
 		// aligned vertically (overlap on X)
-		if ((a.x() > b.x() && a.x() < b.right()) || (a.right() > b.x() && a.right() < b.right())) {
-			int minX = Math.min(a.x(), b.x());
-			int maxX = Math.max(a.right(), b.right());
+		if ((a.x() >= b.x() && a.x() <= b.right()) || (a.right() >= b.x() && a.right() <= b.right())) {
+			int minX = Math.max(a.x(), b.x());
+			int maxX = Math.min(a.right(), b.right());
 			int randomX = minX + random.nextInt(maxX - minX + 1);
 
 			int topY = (a.bottom() < b.y()) ? a.bottom() : a.y();
@@ -118,6 +118,7 @@ public class BSPTree {
 		// If both immediate children are leaves, keep original direct-room connection
 		if (this.left != null && this.left.isLeaf() && this.right != null && this.right.isLeaf()) {
 			createCorridorBetweenRooms(this.left.getRoom(), this.right.getRoom());
+			System.out.println("Corridor between " + this.left.getRoom() + " and " + this.right.getRoom() + " :" + this.getPathPoints());
 			return;
 		}
 
@@ -133,6 +134,7 @@ public class BSPTree {
 			Region from = leftRooms.get(random.nextInt(leftRooms.size()));
 			Region to = rightRooms.get(random.nextInt(rightRooms.size()));
 			createCorridorBetweenRooms(from, to);
+			System.out.println("Corridor between " + from + " and " + to + " :" + this.getPathPoints());
 		}
 	}
 
