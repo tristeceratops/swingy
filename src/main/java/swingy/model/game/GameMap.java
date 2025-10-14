@@ -2,19 +2,18 @@ package swingy.model.game;
 
 import swingy.model.entities.ennemies.Enemy;
 import swingy.model.entities.ennemies.EnemyFactory;
-import swingy.model.entities.heroes.Hero;
 
 import java.util.*;
 
-public class Map {
+public class GameMap {
 
 	int size;
-	Hero hero;
+	int level;
 	List<Enemy> enemies;
 	private final Random random = new Random();
 
 	/*
-	 * map characters and their meanings:
+	 * gameMap characters and their meanings:
 	 * g: ground, empty case
 	 * e: enemy
 	 * h: hero
@@ -22,15 +21,15 @@ public class Map {
 	 */
 	char[][] map;
 
-	public Map(Hero hero) {
-		this.hero = hero;
+	public GameMap(int level) {
+		this.level = level;
 		this.size = calculateSize();
 		this.enemies = new ArrayList<>();
 		createMap();
 	}
 
 	private int calculateSize() {
-		int l = this.hero.getLevel();
+		int l = this.level;
 		return (l - 1) * 5 + 10 - (l % 2);
 	}
 
@@ -45,12 +44,12 @@ public class Map {
 		}
 
 		// Place hero at middle
-		hero.move(this.size / 2, this.size / 2);
-		Coordinate heroCoord = hero.getCoordinate();
+//		hero.move(this.size / 2, this.size / 2);
+//		Coordinate heroCoord = hero.getCoordinate();
 		//draw paths
 		carveMaze();
-		//be sure that hero is well placed on the map
-//        this.map[heroCoord.getY()][heroCoord.getX()] = 'h';
+		//be sure that hero is well placed on the gameMap
+//        this.gameMap[heroCoord.getY()][heroCoord.getX()] = 'h';
 
 		// Place enemies on paths
 //        generateEnemies();
@@ -69,9 +68,9 @@ public class Map {
 
 	//BSP for room generation
 	//then still use BSP to link room with paths
-	//then create some other random paths, assure that the player(middle of the map) is on a ground tiles
+	//then create some other random paths, assure that the player(middle of the gameMap) is on a ground tiles
 	private void carveMaze() {
-		int l = this.hero.getLevel();
+		int l = this.level;
 		int nbRoom = l * (l + 3) + 1;
 		int powerTwo = nearestPowerOf2Below(nbRoom);
 		System.out.println("powerTwo: " + powerTwo + " size : " + this.size);
@@ -256,7 +255,7 @@ public class Map {
 	}
 
 	private void generateEnemies() {
-		int l = this.hero.getLevel();
+		int l = this.level;
 		int nbEnemies = (this.size * this.size) / 20; // fewer enemies for readability
 
 		// Collect all walkable ground tiles
@@ -285,12 +284,12 @@ public class Map {
 		this.size = size;
 	}
 
-	public Hero getHero() {
-		return hero;
+	public int getMapLevel() {
+		return level;
 	}
 
-	public void setHero(Hero hero) {
-		this.hero = hero;
+	public void setHero(int level) {
+		this.level = level;
 	}
 
 	public List<Enemy> getEnemies() {
@@ -307,5 +306,19 @@ public class Map {
 
 	public void setMap(char[][] map) {
 		this.map = map;
+	}
+
+	public List<Coordinate> getGroundTiles(){
+		List<Coordinate> coordinates = new ArrayList<>();
+		int size = this.getSize();
+		char[][] map = this.getMap();
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				if (map[i][j] == 'g') {
+					coordinates.add(new Coordinate(j, i));
+				}
+			}
+		}
+		return coordinates;
 	}
 }

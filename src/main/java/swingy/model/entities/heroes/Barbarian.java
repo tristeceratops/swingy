@@ -20,13 +20,22 @@ public class Barbarian extends Hero{
 				'}';
 	}
 
-	public static class BarbarianBuilder{
-		private String name;
+	public static class BarbarianBuilder implements  HeroBuilder<Barbarian>{
+		private String name = "Barbarian";
+		private int level = 1;
+		private int experience = 0;
 
 		public BarbarianBuilder name(String name) { this.name = name; return this; }
 
-		public Ranger build(){
-			return new Ranger(name);
+		public BarbarianBuilder level(int level) {this.level = level; return this; }
+
+		public BarbarianBuilder experience(int experience) {this.experience = experience; return this; }
+
+		public Barbarian build(){
+			Barbarian barbarian = new Barbarian(name);
+			barbarian.setLevel(level);
+			barbarian.setExperience(experience);
+			return new Barbarian(name);
 		}
 	}
 }

@@ -1,6 +1,7 @@
+D:\Eric\Documents\programmation\springboot\swingy\src\main\java\swingy\controller\console\MenuController.java
 D:\Eric\Documents\programmation\springboot\swingy\src\main\java\swingy\Main.java
-D:\Eric\Documents\programmation\springboot\swingy\src\main\java\swingy\model\Coordinate.java
 D:\Eric\Documents\programmation\springboot\swingy\src\main\java\swingy\model\entities\ennemies\Enemy.java
+D:\Eric\Documents\programmation\springboot\swingy\src\main\java\swingy\model\entities\ennemies\EnemyCreator.java
 D:\Eric\Documents\programmation\springboot\swingy\src\main\java\swingy\model\entities\ennemies\EnemyFactory.java
 D:\Eric\Documents\programmation\springboot\swingy\src\main\java\swingy\model\entities\ennemies\Ghoul.java
 D:\Eric\Documents\programmation\springboot\swingy\src\main\java\swingy\model\entities\ennemies\Slime.java
@@ -10,4 +11,9 @@ D:\Eric\Documents\programmation\springboot\swingy\src\main\java\swingy\model\ent
 D:\Eric\Documents\programmation\springboot\swingy\src\main\java\swingy\model\entities\heroes\HeroFactory.java
 D:\Eric\Documents\programmation\springboot\swingy\src\main\java\swingy\model\entities\heroes\Knight.java
 D:\Eric\Documents\programmation\springboot\swingy\src\main\java\swingy\model\entities\heroes\Ranger.java
-D:\Eric\Documents\programmation\springboot\swingy\src\main\java\swingy\model\Map.java
+D:\Eric\Documents\programmation\springboot\swingy\src\main\java\swingy\model\game\BSPTree.java
+D:\Eric\Documents\programmation\springboot\swingy\src\main\java\swingy\model\game\Coordinate.java
+D:\Eric\Documents\programmation\springboot\swingy\src\main\java\swingy\model\game\gameManager.java
+D:\Eric\Documents\programmation\springboot\swingy\src\main\java\swingy\model\game\GameMap.java
+D:\Eric\Documents\programmation\springboot\swingy\src\main\java\swingy\model\game\Region.java
+D:\Eric\Documents\programmation\springboot\swingy\src\main\java\swingy\view\console\MenuView.java

@@ -55,4 +55,5 @@ public abstract class Hero extends Entity {
 	public void setExperienceToNextLevel(int experienceToNextLevel) {
 		this.experienceToNextLevel = experienceToNextLevel;
 	}
+
 }

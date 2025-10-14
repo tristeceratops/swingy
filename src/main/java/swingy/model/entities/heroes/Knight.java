@@ -20,13 +20,20 @@ public class Knight extends Hero{
 				'}';
 	}
 
-	public static class KnightBuilder{
-		private String name;
+	public static class KnightBuilder implements HeroBuilder<Knight>{
+		private String name = "Knight";
+		private int level = 1;
+		private int experience = 0;
 
 		public KnightBuilder name(String name) { this.name = name; return this; }
+		public KnightBuilder level(int level) { this.level = level; return this; }
+		public KnightBuilder experience(int experience) { this.experience = experience; return this; }
 
-		public Ranger build(){
-			return new Ranger(name);
+		public Knight build(){
+			Knight knight = new Knight(name);
+			knight.setLevel(level);
+			knight.setExperience(experience);
+			return knight;
 		}
 	}
 }
