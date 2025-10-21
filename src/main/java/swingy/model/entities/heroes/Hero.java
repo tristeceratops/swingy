@@ -7,6 +7,7 @@ public abstract class Hero extends Entity {
 
 	protected int experience;
 	protected int experienceToNextLevel;
+	protected String heroClass;
 
 	public Hero(String name, int attack, int defence, int hitPoints) {
 		super();
@@ -38,6 +39,14 @@ public abstract class Hero extends Entity {
 				", experienceToNextLevel=" + experienceToNextLevel +
 				", experience=" + experience +
 				'}';
+	}
+
+	public String getHeroClass() {
+		return heroClass;
+	}
+
+	public void setHeroClass(String heroClass) {
+		this.heroClass = heroClass;
 	}
 
 	public int getExperience() {
