@@ -1,10 +1,9 @@
-package swingy.model.game;
+package swingy.game;
 
-import swingy.model.entities.ennemies.Enemy;
-import swingy.model.entities.ennemies.EnemyFactory;
-import swingy.model.entities.heroes.Hero;
+import swingy.business.entities.enemies.Enemy;
+import swingy.business.entities.enemies.EnemyFactory;
+import swingy.business.entities.heroes.Hero;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 

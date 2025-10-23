@@ -1,6 +1,6 @@
-package swingy.model.entities.ennemies;
+package swingy.business.entities.enemies;
 
-import swingy.model.game.Coordinate;
+import swingy.game.Coordinate;
 
 import java.util.*;
 

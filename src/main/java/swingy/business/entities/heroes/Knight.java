@@ -1,4 +1,4 @@
-package swingy.model.entities.heroes;
+package swingy.business.entities.heroes;
 
 public class Knight extends Hero{
 	public Knight(String name) {

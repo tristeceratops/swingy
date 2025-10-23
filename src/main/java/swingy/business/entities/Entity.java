@@ -1,6 +1,6 @@
-package swingy.model.entities;
+package swingy.business.entities;
 
-import swingy.model.game.Coordinate;
+import swingy.game.Coordinate;
 
 import jakarta.validation.constraints.*;
 

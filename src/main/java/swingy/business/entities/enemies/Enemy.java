@@ -1,6 +1,6 @@
-package swingy.model.entities.ennemies;
+package swingy.business.entities.enemies;
 
-import swingy.model.entities.Entity;
+import swingy.business.entities.Entity;
 
 public class Enemy extends Entity {
 

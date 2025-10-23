@@ -1,7 +1,7 @@
-package swingy.model.game;
+package swingy.game;
 
-import swingy.model.entities.ennemies.Enemy;
-import swingy.model.entities.ennemies.EnemyFactory;
+import swingy.business.entities.enemies.Enemy;
+import swingy.business.entities.enemies.EnemyFactory;
 
 import java.util.*;
 

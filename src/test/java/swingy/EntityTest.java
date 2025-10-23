@@ -2,9 +2,9 @@ package swingy;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import swingy.model.game.Coordinate;
-import swingy.model.entities.Entity;
-import swingy.model.entities.ennemies.Slime;
+import swingy.game.Coordinate;
+import swingy.business.entities.Entity;
+import swingy.business.entities.enemies.Slime;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;

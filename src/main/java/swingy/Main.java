@@ -1,13 +1,8 @@
 package swingy;
 
-import swingy.controller.console.MenuController;
-import swingy.model.entities.heroes.Barbarian;
-import swingy.model.entities.heroes.HeroModel;
-import swingy.model.game.GameMap;
-import swingy.model.entities.heroes.Hero;
-import swingy.model.entities.heroes.HeroFactory;
-
-import java.util.List;
+import swingy.business.entities.heroes.Barbarian;
+import swingy.model.HeroModel;
+import swingy.business.entities.heroes.HeroFactory;
 
 public class Main
 {

@@ -1,4 +1,4 @@
-package swingy.model.entities.heroes;
+package swingy.business.entities.heroes;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

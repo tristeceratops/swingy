@@ -1,4 +1,4 @@
-package swingy.model.game;
+package swingy.game;
 
 public record Region(Coordinate topLeft, int width, int height) {
 	int x() {return topLeft.getX();}

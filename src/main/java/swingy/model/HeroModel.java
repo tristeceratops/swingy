@@ -1,4 +1,7 @@
-package swingy.model.entities.heroes;
+package swingy.model;
+
+import swingy.business.entities.heroes.Hero;
+import swingy.business.entities.heroes.HeroesSavingFile;
 
 import java.util.List;
 
