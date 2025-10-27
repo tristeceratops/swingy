@@ -21,23 +21,16 @@ public class Knight extends Hero{
 				'}';
 	}
 
-	public static class KnightBuilder implements HeroBuilder<Knight>{
-		private String name = "Knight";
-		private int level = 1;
-		private int experience = 0;
-		private int attack = 0;
-		private int defence = 0;
-		private int hitpoints = 0;
+	public static class KnightBuilder extends AbstractHeroBuilder<Knight, KnightBuilder>{
+		{
+			name = "Knight";
+		}
 
-		public KnightBuilder name(String name) { this.name = name; return this; }
-		public KnightBuilder level(int level) { this.level = level; return this; }
-		public KnightBuilder experience(int experience) { this.experience = experience; return this; }
-		public KnightBuilder attack(int attack) {this.attack = attack; return this; }
-		public KnightBuilder defence(int defence) {this.defence = defence; return this; }
-		public KnightBuilder hitpoints(int hitpoints) {this.hitpoints = hitpoints; return this; }
-
-		public Knight build(){
+		@Override
+		public Knight build() {
 			Knight knight = new Knight(name);
+			if (id != null)
+				knight.setId(id);
 			knight.setLevel(level);
 			knight.setExperience(experience);
 			if (attack > 0)

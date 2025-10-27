@@ -1,9 +1,11 @@
 package swingy.DAO.interfaceDAO;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public interface DAO<T> {
-	public abstract T getById(int id);
+	public abstract Optional<T> getById(UUID id);
 
 	public abstract List<T> getAll();
 

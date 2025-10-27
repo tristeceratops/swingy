@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /*
 * How heroes are save
@@ -69,6 +70,7 @@ public class HeroesSavingFile {
 
 		for (Hero hero : heroList) {
 			Element heroElement = document.createElement("hero");
+			heroElement.setAttribute("id", String.valueOf(hero.getId()));
 			heroElement.setAttribute("name", hero.getName());
 			heroElement.setAttribute("class", hero.getHeroClass());
 			heroElement.setAttribute("level", String.valueOf(hero.getLevel()));
@@ -105,6 +107,7 @@ public class HeroesSavingFile {
 			NodeList nodeList = document.getElementsByTagName("hero");
 			for (int i = 0; i < nodeList.getLength(); i++) {
 				Node node = nodeList.item(i);
+				UUID id = UUID.fromString(node.getAttributes().getNamedItem("id").getTextContent());
 				int level = Integer.parseInt(node.getAttributes().getNamedItem("level").getNodeValue());
 				String name = node.getAttributes().getNamedItem("name").getNodeValue();
 				String className = node.getAttributes().getNamedItem("class").getNodeValue();
@@ -112,7 +115,7 @@ public class HeroesSavingFile {
 				int defence = Integer.parseInt(node.getAttributes().getNamedItem("defence").getNodeValue());
 				int health = Integer.parseInt(node.getAttributes().getNamedItem("health").getNodeValue());
 
-				Hero hero = HeroFactory.create(className).name(name).level(level).attack(attack).defence(defence).hitpoints(health).build();
+				Hero hero = HeroFactory.create(className).id(id).name(name).level(level).attack(attack).defence(defence).hitpoints(health).build();
 				heroList.add(hero);
 			}
 		}

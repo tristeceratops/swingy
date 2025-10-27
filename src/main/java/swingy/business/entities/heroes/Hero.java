@@ -3,8 +3,11 @@ package swingy.business.entities.heroes;
 import swingy.game.Coordinate;
 import swingy.business.entities.Entity;
 
+import java.util.UUID;
+
 public abstract class Hero extends Entity {
 
+	protected UUID id;
 	protected int experience;
 	protected int experienceToNextLevel;
 	protected String heroClass;
@@ -65,4 +68,7 @@ public abstract class Hero extends Entity {
 		this.experienceToNextLevel = experienceToNextLevel;
 	}
 
+	public UUID getId() {return id;}
+
+	public void setId(UUID id) {this.id = id;}
 }

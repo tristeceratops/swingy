@@ -21,52 +21,26 @@ public class Ranger extends Hero{
 				'}';
 	}
 
-	public static class RangerBuilder implements HeroBuilder<Ranger> {
-		private String name = "Ranger";
-		private int level = 1;
-		private int experience = 0;
-		private int attack = 0;
-		private int defence = 0;
-		private int hitpoints = 0;
+	public static class RangerBuilder extends AbstractHeroBuilder<Ranger, RangerBuilder>{
 
-		public RangerBuilder name(String name) { this.name = name; return this; }
-
-		public RangerBuilder level(int level) {
-			this.level = level;
-			return this;
+		{
+			name = "Ranger";
 		}
 
-		public RangerBuilder experience(int experience) {
-			this.experience = experience;
-			return this;
-		}
-
-		public RangerBuilder attack(int attack) {
-			this.attack = attack;
-			return this;
-		}
-
-		public RangerBuilder defence(int defence) {
-			this.defence = defence;
-			return this;
-		}
-
-		public RangerBuilder hitpoints(int hitpoints) {
-			this.hitpoints = hitpoints;
-			return this;
-		}
-
-		public Ranger build(){
+		@Override
+		public Ranger build() {
 			Ranger ranger = new Ranger(name);
-			ranger.level = level;
-			ranger.experience = experience;
-			if (this.attack > 0)
+			if (id != null)
+				ranger.setId(id);
+			ranger.setLevel(level);
+			ranger.setExperience(experience);
+			if (attack > 0)
 				ranger.setAttack(this.attack);
-			if (this.defence > 0)
+			if (defence > 0)
 				ranger.setDefence(this.defence);
-			if (this.hitpoints > 0)
+			if (hitpoints > 0)
 				ranger.setHitpoints(this.hitpoints);
-			return new Ranger(name);
+			return ranger;
 		}
 	}
 }

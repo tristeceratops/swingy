@@ -1,12 +1,15 @@
 package swingy.business.entities.heroes;
 
-public interface HeroBuilder<T extends Hero> {
+import java.util.UUID;
 
-	HeroBuilder<T> name(String name);
-    HeroBuilder<T> level(int level);
-    HeroBuilder<T> experience(int experience);
-	HeroBuilder<T> attack(int attack);
-    HeroBuilder<T> defence(int defence);
-    HeroBuilder<T> hitpoints(int hitpoints);
+public interface HeroBuilder<T extends Hero, B extends HeroBuilder<T,B>> {
+
+	B id(UUID id);
+	B name(String name);
+    B level(int level);
+    B experience(int experience);
+	B attack(int attack);
+    B defence(int defence);
+    B hitpoints(int hitpoints);
     T build();
 }

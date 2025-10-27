@@ -2,7 +2,7 @@ package swingy.business.entities.heroes;
 
 public class HeroFactory {
 
-	public static HeroBuilder create(String type) {
+		public static HeroBuilder create(String type) {
 		switch (type) {
 			case "Ranger": return new Ranger.RangerBuilder();
 			case "Knight": return new Knight.KnightBuilder();
