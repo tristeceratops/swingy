@@ -52,7 +52,7 @@ public class HeroesSavingFile {
 		return instance;
 	}
 
-	protected void saveHeroes(List<Hero> heroes) throws ParserConfigurationException {
+	public void saveHeroes(List<Hero> heroes) throws ParserConfigurationException {
 		if (!heroFile.exists()) {
 			try {
 				if (!heroFile.createNewFile())
@@ -93,7 +93,7 @@ public class HeroesSavingFile {
 		}
 	}
 
-	protected List<Hero> loadHeroes() throws ParserConfigurationException, IOException, SAXException {
+	public List<Hero> loadHeroes() throws ParserConfigurationException, IOException, SAXException {
 		if (heroFile.exists() && heroFile.isFile()) {
 
 			//clear list to assure no copies

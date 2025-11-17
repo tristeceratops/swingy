@@ -1,15 +1,16 @@
 package swingy.controller.console;
 
+import swingy.controller.ControllerParent;
 import swingy.view.console.MenuView;
 
-public class MenuController {
+public class MenuController extends ControllerParent {
 
 	boolean running = true;
 	MenuView view = new MenuView();
 
 	public MenuController(){}
 
-	//todo : add model for heroes/enemies, create view and controller for menu in terminal interface
+	//todo : add model for heroes, create view and controller for menu in terminal interface
 	public void start(){
 		while(running){
 			//view show menu

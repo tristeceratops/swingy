@@ -9,6 +9,8 @@ public interface DAO<T> {
 
 	public abstract List<T> getAll();
 
+	public abstract void save(List<T> list); //use to save model list in xml file or sql database
+
 	public abstract boolean create(T entity);
 
 	public abstract boolean update(T entity);

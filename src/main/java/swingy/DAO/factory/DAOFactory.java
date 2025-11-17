@@ -3,10 +3,10 @@ package swingy.DAO.factory;
 import swingy.DAO.Persistance;
 import swingy.DAO.interfaceDAO.HeroDAO;
 
-public abstract class DAOFactory {
+public class DAOFactory {
 
-	public static DAOFactory getDAOFactory(Persistance target) {
-		DAOFactory daoFactory = null;
+	public static DAOFactoryInterface getDAOFactory(Persistance target) {
+		DAOFactoryInterface daoFactory = null;
 		switch (target) {
 			case SQL:
 				daoFactory = new SQLDAOFactory();
@@ -17,6 +17,4 @@ public abstract class DAOFactory {
 		}
 		return daoFactory;
 	}
-
-	public abstract HeroDAO getHeroDAO();
 }

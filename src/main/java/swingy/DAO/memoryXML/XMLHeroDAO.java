@@ -17,6 +17,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,63 +25,41 @@ import java.util.UUID;
 
 public class XMLHeroDAO implements HeroDAO, XMLDAOInterface {
 
-	private List<Hero> heroList;
 
-	public XMLHeroDAO() throws ParserConfigurationException, IOException, SAXException {
-		heroList = loadHeroes();
+	public XMLHeroDAO() {}
+
+	@Override
+	public List<Hero> getAll() {
+		return loadHeroes();
 	}
 
 	@Override
 	public Optional<Hero> getById(UUID id) {
-		return heroList.stream().filter(h -> h.getId() == id).findFirst();
+		throw new UnsupportedOperationException("Use HeroModel to manage heroes");
 	}
 
-	@Override
-	public List<Hero> getAll() {
-		return heroList;
-	}
-
-	//idea: set id here in the creation to assure unique id
 	@Override
 	public boolean create(Hero entity) {
-		Optional<Hero> optional = getById(entity.getId());
-		if (optional.isPresent()) {
-			return false;
-		}
-		heroList.add(entity);
-		return true;
+		throw new UnsupportedOperationException("Use HeroModel to manage heroes");
 	}
 
 	@Override
 	public boolean update(Hero entity) {
-		Optional<Hero> optionalHero = getById(entity.getId());
-
-		if (optionalHero.isPresent()) {
-			Hero hero = optionalHero.get();
-			hero.setLevel(entity.getLevel());
-			hero.setExperience(entity.getExperience());
-			hero.setAttack(entity.getAttack());
-			hero.setDefence(entity.getDefence());
-			hero.setHitpoints(entity.getHitpoints());
-			return true;
-		}
-		return false;
+		throw new UnsupportedOperationException("Use HeroModel to manage heroes");
 	}
 
 	@Override
 	public boolean delete(Hero entity) {
-		Optional<Hero> optionalHero = getById(entity.getId());
-
-		optionalHero.ifPresent(hero -> heroList.remove(hero));
-		return false;
+		throw new UnsupportedOperationException("Use HeroModel to manage heroes");
 	}
 
 	@Override
 	public boolean ifExist(Hero entity) {
-		return heroList.stream().anyMatch(h -> h.getId() == entity.getId());
+		throw new UnsupportedOperationException("Use HeroModel to manage heroes");
 	}
 
-	protected void saveHeroes(List<Hero> heroes) throws ParserConfigurationException {
+	@Override
+	public void save(List<Hero> heroes) {
 		File heroFile = new File(HERO_FILE_PATH);
 		if (!heroFile.exists() || !heroFile.isFile() || !heroFile.canRead() || !heroFile.canWrite()) {
 			try {
@@ -90,62 +69,65 @@ public class XMLHeroDAO implements HeroDAO, XMLDAOInterface {
 				e.printStackTrace();
 			}
 		}
-		DocumentBuilder builder = createDocumentBuilder();
-		Document document = builder.newDocument();
-
-		Element rootElement = document.createElement(ROOT_ELEMENT);
-		document.appendChild(rootElement);
-
-		for (Hero hero : heroList) {
-			Element heroElement = document.createElement(HERO_ELEMENT);
-			heroElement.setAttribute("id", String.valueOf(hero.getId()));
-			heroElement.setAttribute("name", hero.getName());
-			heroElement.setAttribute("class", hero.getHeroClass());
-			heroElement.setAttribute("level", String.valueOf(hero.getLevel()));
-			heroElement.setAttribute("experience", String.valueOf(hero.getExperience()));
-			heroElement.setAttribute("attack", String.valueOf(hero.getAttack()));
-			heroElement.setAttribute("defence", String.valueOf(hero.getDefence()));
-			heroElement.setAttribute("health", String.valueOf(hero.getHitpoints()));
-
-			rootElement.appendChild(heroElement);
-		}
 
 		try {
+			DocumentBuilder builder = createDocumentBuilder();
+			Document document = builder.newDocument();
+
+			Element rootElement = document.createElement(ROOT_ELEMENT);
+			document.appendChild(rootElement);
+
+			for (Hero hero : heroes) {
+				Element heroElement = document.createElement(HERO_ELEMENT);
+				heroElement.setAttribute("id", String.valueOf(hero.getId()));
+				heroElement.setAttribute("name", hero.getName());
+				heroElement.setAttribute("class", hero.getHeroClass());
+				heroElement.setAttribute("level", String.valueOf(hero.getLevel()));
+				heroElement.setAttribute("experience", String.valueOf(hero.getExperience()));
+				heroElement.setAttribute("attack", String.valueOf(hero.getAttack()));
+				heroElement.setAttribute("defence", String.valueOf(hero.getDefence()));
+				heroElement.setAttribute("health", String.valueOf(hero.getHitpoints()));
+
+				rootElement.appendChild(heroElement);
+			}
+
 			Transformer transformer = createTransformer();
 			DOMSource domSource = new DOMSource(document);
 			StreamResult streamResult = new StreamResult(heroFile);
 			transformer.transform(domSource, streamResult);
-		} catch (TransformerException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	protected List<Hero> loadHeroes() throws ParserConfigurationException, IOException, SAXException {
+	public List<Hero> loadHeroes() {
+		List<Hero> heroList = new ArrayList<>();
 		File heroFile = new File(HERO_FILE_PATH);
 		if (heroFile.exists() && heroFile.isFile() && heroFile.canRead()) {
+			DocumentBuilder builder;
+			try {
+				builder = createDocumentBuilder();
+				Document document = builder.parse(HERO_FILE_PATH);
 
-			//clear list to assure no copies
-			heroList.clear();
+				NodeList nodeList = document.getElementsByTagName(HERO_ELEMENT);
+				for (int i = 0; i < nodeList.getLength(); i++) {
+					Node node = nodeList.item(i);
+					UUID id = UUID.fromString(node.getAttributes().getNamedItem("id").getTextContent());
+					int level = Integer.parseInt(node.getAttributes().getNamedItem("level").getNodeValue());
+					String name = node.getAttributes().getNamedItem("name").getNodeValue();
+					String className = node.getAttributes().getNamedItem("class").getNodeValue();
+					int attack = Integer.parseInt(node.getAttributes().getNamedItem("attack").getNodeValue());
+					int defence = Integer.parseInt(node.getAttributes().getNamedItem("defence").getNodeValue());
+					int health = Integer.parseInt(node.getAttributes().getNamedItem("health").getNodeValue());
 
-			DocumentBuilder builder = createDocumentBuilder();
-
-			Document document = builder.parse(HERO_FILE_PATH);
-
-			NodeList nodeList = document.getElementsByTagName(HERO_ELEMENT);
-			for (int i = 0; i < nodeList.getLength(); i++) {
-				Node node = nodeList.item(i);
-				UUID id = UUID.fromString(node.getAttributes().getNamedItem("id").getTextContent());
-				int level = Integer.parseInt(node.getAttributes().getNamedItem("level").getNodeValue());
-				String name = node.getAttributes().getNamedItem("name").getNodeValue();
-				String className = node.getAttributes().getNamedItem("class").getNodeValue();
-				int attack = Integer.parseInt(node.getAttributes().getNamedItem("attack").getNodeValue());
-				int defence = Integer.parseInt(node.getAttributes().getNamedItem("defence").getNodeValue());
-				int health = Integer.parseInt(node.getAttributes().getNamedItem("health").getNodeValue());
-
-				Hero hero = HeroFactory.create(className).id(id).name(name).level(level).attack(attack).defence(defence).hitpoints(health).build();
-				heroList.add(hero);
+					Hero hero = HeroFactory.create(className).id(id).name(name).level(level).attack(attack).defence(defence).hitpoints(health).build();
+					heroList.add(hero);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return heroList;
 			}
 		}
-		return this.heroList;
+		return heroList;
 	}
 }

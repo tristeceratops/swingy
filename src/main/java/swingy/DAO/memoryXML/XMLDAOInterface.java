@@ -7,6 +7,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
+import java.util.List;
 
 public interface XMLDAOInterface {
 	String HERO_FILE_PATH = "heroes.xml";

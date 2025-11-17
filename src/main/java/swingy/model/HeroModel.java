@@ -1,9 +1,12 @@
 package swingy.model;
 
+import swingy.DAO.Persistance;
+import swingy.DAO.factory.DAOFactory;
+import swingy.DAO.interfaceDAO.HeroDAO;
+import swingy.DAO.memoryXML.XMLHeroDAO;
 import swingy.business.entities.heroes.Hero;
-import swingy.business.entities.heroes.HeroesSavingFile;
-
 import java.util.List;
+import java.util.UUID;
 
 //todo: find a way to store info like bonus stat from equipments
 
@@ -17,16 +20,20 @@ import java.util.List;
 public class HeroModel {
 
 	List<Hero> heroList;
+	HeroDAO xmlHeroDAO = DAOFactory.getDAOFactory(Persistance.XML).getHeroDAO();
 
 	public HeroModel() {
 		try {
-			this.heroList = HeroesSavingFile.getInstance().loadHeroes();
+			this.heroList = xmlHeroDAO.getAll();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	//generate UUID here
 	public void addHero(Hero hero){
+		UUID id = UUID.randomUUID();
+		hero.setId(id);
 		heroList.add(hero);
 	}
 
@@ -40,9 +47,12 @@ public class HeroModel {
 
 	public void saveHeroes(){
 		try {
-			HeroesSavingFile.getInstance().saveHeroes(this.heroList);
+			xmlHeroDAO.save(heroList); //TODO: problem with interface, here xmlHeroDao is save as HeroDAO so no access to saveHeroes
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void save(){
 	}
 }
